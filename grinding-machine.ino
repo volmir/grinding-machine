@@ -1,9 +1,8 @@
-#define delay_min 1
-#define delay_max 12
 
 #define potentiometr_pin A1
-int potentiometr_val;
-int delay_val;
+int potentiometr, potentiometr_last, potentiometr_min, potentiometr_max = 0;
+int hysteresis = 20;
+int speed_val;
 
 #define step_pin 4
 #define dir_pin 5
@@ -41,18 +40,24 @@ void setup() {
 
 void loop() {
 
-  potentiometr_val = analogRead(potentiometr_pin);
-  delay_val = map(potentiometr_val, 0, 1023, delay_max, delay_min);
-  //Serial.println(potentiometr_val);
-  //Serial.println(delay_val);
-
-
-  delay_val = delay_val * 480;
+  potentiometr = analogRead(potentiometr_pin);
+  potentiometr_min = potentiometr_last - hysteresis;
+  potentiometr_max = potentiometr_last + hysteresis;
+  if (potentiometr != potentiometr_last) {
+    if ((potentiometr > potentiometr_max) || (potentiometr < potentiometr_min)) {
+      potentiometr_last = potentiometr;
+    }    
+  }
+  potentiometr_last = map(potentiometr_last, 0, 1023, 1023, 0);
+  //Serial.println(potentiometr_last);
+  
+  speed_val = potentiometr_last * 5.8;
+  //Serial.println(speed_val);
 
   if (sensorFlag) {
-    stepper.setSpeed(-delay_val);
+    stepper.setSpeed(-speed_val);
   } else {
-    stepper.setSpeed(delay_val);
+    stepper.setSpeed(speed_val);
   }
 
 
