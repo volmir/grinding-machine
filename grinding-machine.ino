@@ -1,7 +1,7 @@
 
 #define potentiometr_pin A1
 int potentiometr, potentiometr_last, potentiometr_min, potentiometr_max = 0;
-int hysteresis = 20;
+int hysteresis = 10;
 int speed_val;
 
 #define step_pin 4
@@ -34,8 +34,8 @@ void setup() {
   digitalWrite(dir_pin, LOW);
   digitalWrite(enable_pin, HIGH);
 
-  stepper.setMaxSpeed(7000);
-  stepper.setAcceleration(3000);
+  stepper.setMaxSpeed(6000);
+  stepper.setAcceleration(300);
 }
 
 void loop() {
@@ -51,7 +51,7 @@ void loop() {
   potentiometr_last = map(potentiometr_last, 0, 1023, 1023, 0);
   //Serial.println(potentiometr_last);
   
-  speed_val = potentiometr_last * 5.8;
+  speed_val = potentiometr_last * 5.5;
   //Serial.println(speed_val);
 
   if (sensorFlag) {
