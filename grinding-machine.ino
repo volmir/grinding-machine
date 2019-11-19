@@ -48,10 +48,10 @@ void loop() {
       potentiometr_last = potentiometr;
     }    
   }
-  potentiometr_last = map(potentiometr_last, 0, 1023, 1023, 0);
+  potentiometr_last = map(potentiometr_last, 0, 1023, 50, 1023);
   //Serial.println(potentiometr_last);
   
-  speed_val = potentiometr_last * 5.5;
+  speed_val = potentiometr_last * 5.6;
   //Serial.println(speed_val);
 
   if (sensorFlag) {
