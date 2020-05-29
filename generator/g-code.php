@@ -27,22 +27,22 @@ fclose($stdin);
 if ($x_len > LIMIT_X) {
     $x_len = LIMIT_X;
 }
-if (($y_len + Y_STEP) > LIMIT_Y) {
-    $y_len = LIMIT_Y - Y_STEP;
+if ((ceil($y_len / Y_STEP) * Y_STEP) > LIMIT_Y) {
+    $y_len = LIMIT_Y;
 }
 if ($z_len > LIMIT_Z) {
     $z_len = LIMIT_Z;
 }
 
 
+$z_steps = ceil($z_len / Z_STEP);
+$y_steps = ceil($y_len / Y_STEP);
+
 $gcode = '(Surface Grinding)' . PHP_EOL;
 $gcode .= 'G21 G40 G49 G54 G80 G90' . PHP_EOL;
 $gcode .= 'M03 S3000' . PHP_EOL;
 $gcode .= 'M07' . PHP_EOL;
 $gcode .= 'G0 X0 Y0 Z0' . PHP_EOL;
-
-$z_steps = ceil($z_len / Z_STEP);
-$y_steps = ceil($y_len / Y_STEP);
 
 $z_current = 0;
 
