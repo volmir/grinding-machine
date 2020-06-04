@@ -51,7 +51,7 @@ for ($i = 0; $i < $z_steps; $i++) {
     $y_current = 0;
     $z_current += Z_STEP;
     
-    $gcode .= 'G0 Z' . $z_current . PHP_EOL;
+    $gcode .= 'G0 Z-' . $z_current . PHP_EOL;
     for ($j = 0; $j < $y_steps; $j++) {       
         if ($x_current == 0) {
             $x_current = $x_len;
@@ -76,7 +76,7 @@ $gcode .= 'M09' . PHP_EOL;
 $gcode .= 'M05' . PHP_EOL;
 $gcode .= 'M30' . PHP_EOL;
 
-$filename = 'g-code_' . $x_len . 'x' . $y_len . 'x' . $z_len . '.nc';
+$filename = 'g-code_' . $x_len . 'x' . $y_len . 'x' . $z_len . '.ngc';
 file_put_contents($filename, $gcode);
 
 echo "File generated: " . $filename . PHP_EOL;
