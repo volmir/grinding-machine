@@ -46,9 +46,12 @@ $gcode .= 'G0 X0 Y0 Z0' . PHP_EOL;
 
 $z_current = 0;
 
-for ($i = 0; $i < $z_steps; $i++) {
+for ($i = 0; $i < ceil($z_steps / 2); $i++) {
     $x_current = 0;
-    $y_current = 0;
+    $y_current = 0;    
+    
+    /*------------------------------------*/
+    /* Forward */
     $z_current += Z_STEP;
     
     $gcode .= 'G0 Z-' . $z_current . PHP_EOL;
@@ -68,6 +71,27 @@ for ($i = 0; $i < $z_steps; $i++) {
         $gcode .= 'G0 X' . $x_current . PHP_EOL;
     }
     
+    /*------------------------------------*/
+    /* Backward */  
+    if ($z_current < $z_len) {
+        $z_current += Z_STEP;
+    }
+    
+    $gcode .= 'G0 Z-' . $z_current . PHP_EOL;
+    for ($j = 0; $j < $y_steps; $j++) {       
+        if ($x_current == 0) {
+            $x_current = $x_len;
+        } else {
+            $x_current = 0;
+        } 
+        $gcode .= 'G0 X' . $x_current . PHP_EOL;
+        
+        $y_current -= Y_STEP;
+        $gcode .= 'G0 Y' . $y_current . PHP_EOL;
+    }
+    
+    /*------------------------------------*/
+    /* Home */
     $gcode .= 'G0 X0' . PHP_EOL;
     $gcode .= 'G0 Y0' . PHP_EOL;
 }
