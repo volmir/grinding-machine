@@ -5,7 +5,7 @@ const LIMIT_Y = 50;
 const LIMIT_Z = 30;
 
 const Z_STEP = 0.01;
-const Y_STEP = 10;
+const Y_STEP = 2;
 
 
 $stdin = fopen("php://stdin", "r");
@@ -23,20 +23,28 @@ echo "Type 'Z' length: ";
 $z_len = (float) trim(fgets(STDIN));
 fclose($stdin);
 
+$stdin = fopen("php://stdin", "r");
+echo "Type 'Y_STEP' value: ";
+$y_step = (float) trim(fgets(STDIN));
+fclose($stdin);
+
 
 if ($x_len > LIMIT_X) {
     $x_len = LIMIT_X;
 }
-if ((ceil($y_len / Y_STEP) * Y_STEP) > LIMIT_Y) {
+if ((ceil($y_len / $y_step) * $y_step) > LIMIT_Y) {
     $y_len = LIMIT_Y;
 }
 if ($z_len > LIMIT_Z) {
     $z_len = LIMIT_Z;
 }
+if ($y_step > $y_len) {
+    $y_len = $y_step;
+}
 
 
 $z_steps = ceil($z_len / Z_STEP);
-$y_steps = ceil($y_len / Y_STEP);
+$y_steps = ceil($y_len / $y_step);
 
 $gcode = '(Surface Grinding)' . PHP_EOL;
 $gcode .= 'G21 G40 G49 G54 G80 G90' . PHP_EOL;
@@ -63,7 +71,7 @@ for ($i = 0; $i < ceil($z_steps / 2); $i++) {
         } 
         $gcode .= 'G0 X' . $x_current . PHP_EOL;
         
-        $y_current += Y_STEP;
+        $y_current += $y_step;
         $gcode .= 'G0 Y' . $y_current . PHP_EOL;
     }
     if ($y_steps % 2 === 0) {
@@ -86,7 +94,7 @@ for ($i = 0; $i < ceil($z_steps / 2); $i++) {
         } 
         $gcode .= 'G0 X' . $x_current . PHP_EOL;
         
-        $y_current -= Y_STEP;
+        $y_current -= $y_step;
         $gcode .= 'G0 Y' . $y_current . PHP_EOL;
     }
     
@@ -100,7 +108,7 @@ $gcode .= 'M09' . PHP_EOL;
 $gcode .= 'M05' . PHP_EOL;
 $gcode .= 'M30' . PHP_EOL;
 
-$filename = 'g-code_' . $x_len . 'x' . $y_len . 'x' . $z_len . '.ngc';
+$filename = 'g-code_' . $x_len . 'x' . $y_len . 'x' . $z_len . '_step' . $y_step . '.ngc';
 file_put_contents($filename, $gcode);
 
 echo "File generated: " . $filename . PHP_EOL;
